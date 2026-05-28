@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prompt Learning Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f5f5, #e6e6e6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 60px;
+      border-radius: 20px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 800px;
+      border-top: 12px solid #E2231A;
+    }
+
+    .phrase {
+      font-size: 72px;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 40px;
+    }
+
+    .definition {
+      font-size: 32px;
+      color: #444;
+      margin-top: 30px;
+      display: none;
+    }
+
+    /* ✅ NEW: centered button group */
+    .button-row {
+      display: flex;
+      justify-content: center;  /* centers the whole group */
+      gap: 20px;               /* controls spacing between buttons */
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 18px 28px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background-color: #E2231A;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #b71c16;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div id="phrase" class="phrase"></div>
+    <div id="definition" class="definition"></div>
+
+    <div class="button-row">
+      <button onclick="showPrevious()">Previous</button>
+      <button id="toggleBtn" onclick="toggleAnswer()">Show Answer</button>
+      <button onclick="showRandom()">Next</button>
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      { phrase: "Zero-shot", definition: "Direct instruction with no examples" },
+      { phrase: "Few-shot", definition: "Provides input-output examples before the request" },
+      { phrase: "Chain-of-thought", definition: "Asks the model to reason step-by-step" },
+      { phrase: "Tree-of-thought", definition: "Explores multiple reasoning paths before selecting the best one" },
+      { phrase: "Role or persona", definition: "Assigns the model an identity or expertise" },
+      { phrase: "Prompt chaining", definition: "Breaks complex tasks into sequential prompts" },
+      { phrase: "Meta-prompting", definition: "Uses an LLM to generate or improve prompts" },
+      { phrase: "Reflection prompting", definition: "Asks the model to critique and refine its own output" }
+    ];
+
+    let history = [];
+    let currentIndex = -1;
+
+    function showRandom() {
+      const randomIndex = Math.floor(Math.random() * data.length);
+
+      history.push(randomIndex);
+      currentIndex = history.length - 1;
+
+      displayItem(randomIndex);
+    }
+
+    function showPrevious() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        displayItem(history[currentIndex]);
+      }
+    }
+
+    function toggleAnswer() {
+      const def = document.getElementById("definition");
+      const btn = document.getElementById("toggleBtn");
+
+      if (def.style.display === "none") {
+        def.style.display = "block";
+        btn.textContent = "Hide Answer";
+      } else {
+        def.style.display = "none";
+        btn.textContent = "Show Answer";
+      }
+    }
+
+    function displayItem(index) {
+      document.getElementById("phrase").textContent = data[index].phrase;
+      document.getElementById("definition").textContent = data[index].definition;
+
+      document.getElementById("definition").style.display = "none";
+      document.getElementById("toggleBtn").textContent = "Show Answer";
+    }
+
+    // Load first item
+    showRandom();
+  </script>
+
+</body>
+</html>
